@@ -3,7 +3,11 @@ const app = express();
 const path = require("path");
 const { Campground } = require("./models/camp.js");
 const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+const engine = require('ejs-mate');
 
+app.engine("ejs", engine);
+app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
@@ -16,7 +20,6 @@ app.get("/", (req, res) => {
 
 app.get("/campground", async (req, res) => {
   const campgrounds = await Campground.find({});
-  console.log(campgrounds);
   res.render("campground/allCampground.ejs", { campgrounds });
 });
 
@@ -50,6 +53,13 @@ app.post("/campground/:id/edit", async (req, res) => {
   const { location, title } = req.body;
   await Campground.findByIdAndUpdate(id, { location, title });
   res.redirect("/campground");
+});
+
+app.delete("/campground/:id/delete" , async (req,res) => {
+  const {id} = req.params;
+  await Campground.findByIdAndDelete(id);
+  res.redirect("/campground");
+
 });
 
 app.listen("8080", (req, res) => {

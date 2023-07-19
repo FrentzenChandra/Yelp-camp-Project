@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Camp</title>
-</head>
-<body>
+<% layout('boilerplate/html.ejs') -%>
+
     <h1>All Campgrounds</h1>
     <a href="/campground/new">new Campground???</a>
     <ul>
@@ -13,5 +7,3 @@
             <li><a href="/campground/<%= campground.id %>"><%= campground.title %></a></li>
         <% } %>
     </ul>
-</body>
-</html>
