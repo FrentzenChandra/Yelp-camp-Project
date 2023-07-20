@@ -4,6 +4,22 @@
     <a href="/campground/new">new Campground???</a>
     <ul>
         <% for( campground of campgrounds) { %>
-            <li><a href="/campground/<%= campground.id %>"><%= campground.title %></a></li>
+            <div class="card my-4 " style="width: auto;">
+                <div class="row d-flex ">
+                    <div class="col-4">
+                        <img src="<%= campground.image %>" class="card-img-top font-bold" alt="...">   
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body pb-0">
+                            <h5 class="card-title"><%= campground.title %></h5>
+                            <p class="card-text mb-2"><%= campground.description %></p>
+                            <a href="/campground/<%= campground.id %>" class="btn btn-primary ">Detail</a>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
         <% } %>
     </ul>
+

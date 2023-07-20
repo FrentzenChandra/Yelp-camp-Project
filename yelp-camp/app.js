@@ -4,7 +4,7 @@ const path = require("path");
 const { Campground } = require("./models/camp.js");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const engine = require('ejs-mate');
+const engine = require("ejs-mate");
 
 app.engine("ejs", engine);
 app.use(methodOverride("_method"));
@@ -42,24 +42,23 @@ app.get("/campground/:id", async (req, res) => {
 
 // Routes Post
 app.post("/campground/new", async (req, res) => {
-  const { title, location } = req.body;
-  const campground = new Campground({ title, location });
+  const { title, location, price, description, image } = req.body;
+  const campground = new Campground({ title, location, price, description, image });
   await campground.save();
   res.redirect("/campground");
 });
 
 app.post("/campground/:id/edit", async (req, res) => {
   const { id } = req.params;
-  const { location, title } = req.body;
-  await Campground.findByIdAndUpdate(id, { location, title });
+  const { title, location, price, description, image } = req.body;
+  await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
   res.redirect("/campground");
 });
 
-app.delete("/campground/:id/delete" , async (req,res) => {
-  const {id} = req.params;
+app.delete("/campground/:id/delete", async (req, res) => {
+  const { id } = req.params;
   await Campground.findByIdAndDelete(id);
   res.redirect("/campground");
-
 });
 
 app.listen("8080", (req, res) => {

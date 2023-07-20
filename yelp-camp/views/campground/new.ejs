@@ -1,8 +1,35 @@
 <% layout('boilerplate/html.ejs') -%>
 
-    <form action="/campground/new" method="POST">
-        <label for="title">Title :  </label><input type="text" name="title" id="title" placeholder="Title??"><br> <br>
-        <label for="location">Location :  </label><input type="text" name="location" id="locaiton" placeholder="location"><br><br>
-        <button>Add?</button>
-    </form><br>
-    <a href="/campground">Back???</a>
+<div class="container">
+    <form action="/campground/new" method="post">
+        <div class="mx-auto w-50">
+            <h1 class="text-center mb-5 ">New Campground</h1>
+            <div class="form-floating mb-3">
+                <input required type="text" name="title" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Title</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input required type="text" name="location" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Location</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input required type="text" name="image" class="form-control" id="floatingImage" placeholder="Password">
+                <label for="floatingImage">Image Url</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input required type="text" name="price" class="form-control" id="floatingPrice" placeholder="Password">
+                <label for="floatingPrice">Price </label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea name="description" id="floatingDescription" class="form-control"  style="height: 100px" placeholder="Password"></textarea>
+                <label for="floatingDescription">Description</label>
+            </div>
+            
+            <button class="btn btn-success mt-5">Submit</button>
+        </div>
+    </form>
+    
+
+</div>
+    
+

@@ -25,4 +25,15 @@ const makeCampground = async () => {
   
 };
 
-makeCampground();
+const pushDescAndPic = async () => {
+  const campgrounds = await Campground.find({});
+  for(let campground of campgrounds){
+  campground.price = 5;
+  await campground.save();
+
+  }
+}
+
+
+
+
