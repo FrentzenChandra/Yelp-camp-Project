@@ -1,35 +1,68 @@
 <% layout('boilerplate/html.ejs') -%>
 
-<div class="container">
-    <form action="/campground/new" method="post">
-        <div class="mx-auto w-50">
-            <h1 class="text-center mb-5 ">New Campground</h1>
-            <div class="form-floating mb-3">
-                <input required type="text" name="title" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Title</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input required type="text" name="location" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Location</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input required type="text" name="image" class="form-control" id="floatingImage" placeholder="Password">
-                <label for="floatingImage">Image Url</label>
-            </div>
-            <div class="form-floating mb-4">
-                <input required type="text" name="price" class="form-control" id="floatingPrice" placeholder="Password">
-                <label for="floatingPrice">Price </label>
-            </div>
-            <div class="form-floating mb-3">
-                <textarea name="description" id="floatingDescription" class="form-control"  style="height: 100px" placeholder="Password"></textarea>
-                <label for="floatingDescription">Description</label>
-            </div>
-            
-            <button class="btn btn-success mt-5">Submit</button>
-        </div>
-    </form>
-    
+    <div class="container">
+        <form action="/campground/new" class="needs-validation" method="post" novalidate>
+            <div class="mx-auto w-50">
+                <h1 class="text-center mb-5 ">New Campground</h1>
+                <div class="form-floating mb-3">
+                    <input required type="text" name="title" class="form-control" id="validationCustom01"
+                        placeholder="name@example.com">
+                    <label for="validationCustom01">Title</label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input required type="text" name="location" class="form-control" id="floatingPassword"
+                        placeholder="Password">
+                    <label for="floatingPassword">Location</label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Invalid Location
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input required type="text" name="image" class="form-control" id="floatingImage"
+                        placeholder="Password">
+                    <label for="floatingImage">Image Url</label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Invalid Url
+                    </div>
+                </div>
+                <div class="form-floating mb-4">
+                    <input required type="text" name="price" class="form-control" id="floatingPrice"
+                        placeholder="Password">
+                    <label for="floatingPrice">Price </label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Invalid Price
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea required name="description" id="floatingDescription" class="form-control"
+                        style="height: 100px" placeholder="Password"></textarea>
+                    <label for="floatingDescription">Description</label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please input Nice Validation
+                    </div>
+                </div>
 
-</div>
-    
+                <button class="btn btn-success mt-5">Submit</button>
+            </div>
+        </form>
 
+
+    </div>

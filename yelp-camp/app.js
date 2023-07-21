@@ -5,6 +5,15 @@ const { Campground } = require("./models/camp.js");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const engine = require("ejs-mate");
+const mongoose = require("mongoose");
+
+main().catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp");
+
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+}
 
 app.engine("ejs", engine);
 app.use(methodOverride("_method"));
@@ -30,7 +39,6 @@ app.get("/campground/new", (req, res) => {
 app.get("/campground/:id/edit", async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
-
   res.render("campground/edit.ejs", { campground });
 });
 
@@ -57,7 +65,8 @@ app.post("/campground/:id/edit", async (req, res) => {
 
 app.delete("/campground/:id/delete", async (req, res) => {
   const { id } = req.params;
-  await Campground.findByIdAndDelete(id);
+  const campground = await Campground.findByIdAndDelete(id);
+  console.log(campground);
   res.redirect("/campground");
 });
 

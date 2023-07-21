@@ -12,7 +12,7 @@ async function main() {
 
 const CampgroundSchema = new Schema({
     location:String, 
-    title: String,   
+    title: String,
     image:String,
     price:Number,
     description:String,
