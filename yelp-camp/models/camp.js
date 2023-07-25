@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const {Schema} = mongoose;
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const Review = require("./review.js");
 
 main().catch((err) => console.log(err));
 
@@ -9,15 +10,28 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-
 const CampgroundSchema = new Schema({
-    location:String, 
-    title: String,
-    image:String,
-    price:Number,
-    description:String,
+  location: String,
+  title: String,
+  image: String,
+  price: Number,
+  description: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
 });
 
-const Campground = mongoose.model('Campground',CampgroundSchema);
+CampgroundSchema.post("findOneAndDelete", async function (camp) {
+  if(camp){
+    await Review.deleteMany({_id :{$in: camp.reviews }});
+  }
+  
+});
 
-module.exports = {Campground};
+const Campground = mongoose.model("Campground", CampgroundSchema);
+
+
+module.exports = { Campground };
