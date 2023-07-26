@@ -11,6 +11,7 @@ const ExpressError = require("./utils/expressError.js");
 const { validateCampground } = require("./utils/validateCampground.js");
 const { validateReview } = require("./utils/validateReview.js");
 const Review = require("./models/review.js");
+const campgroundRoutes = require("./routers/campground.js");
 
 main().catch((err) => console.log(err));
 
@@ -20,15 +21,7 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-const campgroundValidation = (req, res, next) => {
-  const { error } = validateCampground(req.body);
-  if (error) {
-    const errorMessage = error.details.map((el) => el.message).join(",");
-    throw new Error(errorMessage);
-  } else {
-    next();
-  }
-};
+
 
 const reviewValidation = (req, res, next) => {
   const { error } = validateReview(req.body);
@@ -47,57 +40,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use("/campground", campgroundRoutes);
+
+
 // Routes get
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-app.get("/campground", async (req, res, next) => {
-  const campgrounds = await Campground.find({});
-  res.render("campground/allCampground.ejs", { campgrounds });
-});
+// Routes Post And Put
 
-app.get("/campground/new", (req, res) => {
-  res.render("campground/new.ejs");
-});
-
-app.get("/campground/:id/edit", async (req, res) => {
-  const { id } = req.params;
-  const campground = await Campground.findById(id);
-  res.render("campground/edit.ejs", { campground });
-});
-
-app.get(
-  "/campground/:id",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).populate("reviews");
-    res.render("campground/show.ejs", { campground });
-  })
-);
-
-// Routes Post
-app.post(
-  "/campground/new",
-  campgroundValidation,
-  catchAsync(async (req, res, next) => {
-    const { title, location, price, description, image } = req.body;
-
-    const campground = new Campground({ title, location, price, description, image });
-    await campground.save();
-    res.redirect("/campground");
-  })
-);
-
-app.post(
-  "/campground/:id/edit",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const { title, location, price, description, image } = req.body;
-    await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
-    res.redirect("/campground");
-  })
-);
 
 app.post("/campground/:id/review", reviewValidation, async (req, res) => {
   const { id } = req.params;
@@ -110,15 +62,6 @@ app.post("/campground/:id/review", reviewValidation, async (req, res) => {
 });
 
 // Routes delete
-
-app.delete(
-  "/campground/:id/delete",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect("/campground");
-  })
-);
 
 app.delete("/campground/:id/review/:idReview", async (req, res) => {
   const { id, idReview } = req.params;

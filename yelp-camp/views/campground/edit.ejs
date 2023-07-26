@@ -1,7 +1,7 @@
 <% layout('boilerplate/html.ejs') -%>
 
     <div class="container">
-        <form action="/campground/new" class="needs-validation" method="post" novalidate>
+        <form action="/campground/<%= campground.id %>/edit?_method=PUT" class="needs-validation" method="post" novalidate>
             <div class="mx-auto w-50">
                 <h1 class="text-center mb-5 ">New Campground</h1>
                 <div class="form-floating mb-3">
