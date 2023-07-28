@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync.js");
 const { Campground } = require("../models/camp.js");
 const { validateCampground } = require("../utils/validateCampground.js");
 
+
 const campgroundValidation = (req, res, next) => {
   const { error } = validateCampground(req.body);
   if (error) {
@@ -35,6 +36,10 @@ router.get(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id).populate("reviews");
+    if(!campground) {
+      req.flash('error','Cannot find that campground');
+      return res.redirect('/campground');
+    }
     res.render("campground/show.ejs", { campground });
   })
 );
@@ -47,6 +52,7 @@ router.post(
     const { title, location, price, description, image } = req.body;
     const campground = new Campground({ title, location, price, description, image });
     await campground.save();
+    req.flash('success',"Sukses Membuat Camground Baru!!!");
     res.redirect("/campground");
   })
 );
@@ -58,6 +64,7 @@ router.put(
     const { id } = req.params;
     const { title, location, price, description, image } = req.body;
     await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
+    req.flash('success','Campground Berhasil diubah!!!');
     res.redirect("/campground");
   })
 );
@@ -69,6 +76,7 @@ router.delete(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
+    req.flash('success','Berhasil menghapus campground!!!');
     res.redirect("/campground");
   })
 );

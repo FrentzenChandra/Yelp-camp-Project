@@ -9,6 +9,7 @@ const ExpressError = require("./utils/expressError.js");
 const session = require("express-session");
 const campgroundRoutes = require("./routers/campground.js");
 const reviewRoutes = require("./routers/reviews.js");
+const flash = require("connect-flash");
 
 main().catch((err) => console.log(err));
 
@@ -29,16 +30,22 @@ const sessionConfig = {
   },
 };
 
-app.use(session(sessionConfig));
-
 app.engine("ejs", engine);
+app.use(flash());
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session(sessionConfig));
+app.use((req,res,next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+})
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+//Routes From another file
 app.use("/campground", campgroundRoutes);
 app.use("/campground/:id/review", reviewRoutes);
 
