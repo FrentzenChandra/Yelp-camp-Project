@@ -4,12 +4,15 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const engine = require("ejs-mate");
+const { User } = require("./models/user");
 const mongoose = require("mongoose");
 const ExpressError = require("./utils/expressError.js");
 const session = require("express-session");
 const campgroundRoutes = require("./routers/campground.js");
 const reviewRoutes = require("./routers/reviews.js");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
 
 main().catch((err) => console.log(err));
 
@@ -19,6 +22,19 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
+// ejs setup
+app.engine("ejs", engine);
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Method Override Setup
+app.use(methodOverride("_method"));
+
+// Body Parser Setup
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Session Setup
 const sessionConfig = {
   secret: "thisisnotagoodsecret",
   resave: false,
@@ -29,29 +45,42 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
-
-app.engine("ejs", engine);
-app.use(flash());
-app.use(methodOverride("_method"));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
 app.use(session(sessionConfig));
-app.use((req,res,next) => {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
+
+// Flash Setup
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
   next();
-})
+});
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// Passport setup
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-//Routes From another file
+// Routes From another file
 app.use("/campground", campgroundRoutes);
 app.use("/campground/:id/review", reviewRoutes);
 
 // Routes get
 app.get("/", (req, res) => {
   res.render("home.ejs");
+});
+
+app.get("/register", (req, res) => {
+  res.render("register.ejs");
+});
+
+// Routes post
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  const user = new User({ email, username: name });
+  const newUser = await User.register(user, password);
+  res.send(newUser);
 });
 
 // Middleware Ini berlaku ke sebuah router yang tidak diketahui
@@ -63,7 +92,6 @@ app.all("*", (req, res) => {
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Oh Boy there Something Wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
-  
 });
 
 app.listen("8080", (req, res) => {
