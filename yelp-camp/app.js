@@ -63,6 +63,7 @@ app.all("*", (req, res) => {
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Oh Boy there Something Wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
+  
 });
 
 app.listen("8080", (req, res) => {
