@@ -15,6 +15,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+
 main().catch((err) => console.log(err));
 
 async function main() {
@@ -48,8 +49,6 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
-
-
 // Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
@@ -57,9 +56,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash Setup
+// Flash Setup dan data local lainnya
 app.use(flash());
 app.use((req, res, next) => {
+  console.log(session);
   res.locals.user = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -69,8 +69,7 @@ app.use((req, res, next) => {
 // Routes From another file
 app.use("/", registerRoutes);
 app.use("/campground", campgroundRoutes);
-app.use("/campground/:id/review", reviewRoutes); 
-
+app.use("/campground/:id/review", reviewRoutes);
 
 // Routes get
 app.get("/", (req, res) => {
