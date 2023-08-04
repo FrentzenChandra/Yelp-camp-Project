@@ -10,6 +10,7 @@ const ExpressError = require("./utils/expressError.js");
 const session = require("express-session");
 const campgroundRoutes = require("./routers/campground.js");
 const reviewRoutes = require("./routers/reviews.js");
+const registerRoutes = require("./routers/register.js");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -47,13 +48,7 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
-// Flash Setup
-app.use(flash());
-app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  next();
-});
+
 
 // Passport setup
 app.use(passport.initialize());
@@ -62,26 +57,27 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Flash Setup
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
 // Routes From another file
+app.use("/", registerRoutes);
 app.use("/campground", campgroundRoutes);
-app.use("/campground/:id/review", reviewRoutes);
+app.use("/campground/:id/review", reviewRoutes); 
+
 
 // Routes get
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
-});
-
 // Routes post
-app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  const user = new User({ email, username: name });
-  const newUser = await User.register(user, password);
-  res.send(newUser);
-});
 
 // Middleware Ini berlaku ke sebuah router yang tidak diketahui
 app.all("*", (req, res) => {

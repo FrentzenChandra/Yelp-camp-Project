@@ -1,17 +1,7 @@
 <% layout('boilerplate/html.ejs') -%>
-    <h1 class="text-center my-5">Registertion</h1>
-    <form action="/register" method="post" class='needs-validation'  novalidate>
-        <div class="form-floating mb-4">
-            <input required type="email" name="email" class="form-control " id="validationCustom01"
-                placeholder="name@example.com">
-            <label for="validationCustom01">Input Email</label>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please Input valid email.
-            </div>
-        </div>
+
+    <h1 class="text-center my-5">Login</h1>
+    <form action="/login" method="post" class='needs-validation' novalidate>
         <div class="form-floating mb-4">
             <input required type="text" name="username" class="form-control" id="validationCustom01"
                 placeholder="name@example.com">
@@ -34,6 +24,6 @@
                 Please choose a username.
             </div>
         </div>
-        
+    
         <button class="btn btn-primary">Register</button>
     </form>
