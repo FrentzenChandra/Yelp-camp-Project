@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-8">
                         <div class="card-body pb-0">
-                            <h5 class="card-title"><%= campground.title %></h5>
+                            <h5 class="card-title"><%= campground.title %> - <span class="text-muted"><%= campground.user.username %></span></h5>
                             <p class="card-text mb-2"><%= campground.description %></p>
                             <a href="/campground/<%= campground.id %>" class="btn btn-primary ">Detail</a>
                         </div>

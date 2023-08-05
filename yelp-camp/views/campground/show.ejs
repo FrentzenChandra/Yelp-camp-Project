@@ -4,6 +4,7 @@
         <img src="<%=campground.image%>" class="card-img-top img-fluid" alt="No Picture">
         <div class="card-body">
             <h5 class="card-title font-bold"><%= campground.title %></h5>
+            <h5 class="card-title font-bold  mb-3">Post By : <span class="text-muted"><%= campground.user.username %></span></h5>
             <p class="card-text"><%= campground.description %></p>
         </div>    
         <div>

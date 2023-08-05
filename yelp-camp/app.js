@@ -59,7 +59,6 @@ passport.deserializeUser(User.deserializeUser());
 // Flash Setup dan data local lainnya
 app.use(flash());
 app.use((req, res, next) => {
-  console.log(session);
   res.locals.user = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");

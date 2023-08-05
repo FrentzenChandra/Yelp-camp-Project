@@ -17,7 +17,7 @@ const campgroundValidation = (req, res, next) => {
 
 // routes get
 router.get("/", async (req, res, next) => {
-  const campgrounds = await Campground.find({});
+  const campgrounds = await Campground.find({}).populate("user");
   res.render("campground/allCampground.ejs", { campgrounds });
 });
 
@@ -35,7 +35,7 @@ router.get(
   "/:id",
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id).populate("reviews");
+    const campground = await Campground.findById(id).populate("reviews").populate("user");
     if (!campground) {
       req.flash("error", "Cannot find that campground");
       return res.redirect("/campground");
@@ -50,8 +50,9 @@ router.post(
   campgroundValidation,
   isLoggedIn,
   catchAsync(async (req, res) => {
+    const user = req.user.id;
     const { title, location, price, description, image } = req.body;
-    const campground = new Campground({ title, location, price, description, image });
+    const campground = new Campground({ title, location, price, description, image, user });
     await campground.save();
     req.flash("success", "Sukses Membuat Camground Baru!!!");
     res.redirect("/campground");
