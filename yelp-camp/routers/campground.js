@@ -1,31 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const catchAsync = require("../utils/catchAsync.js");
+const catchAsync = require("../utils & midleware/catchAsync.js");
 const { Campground } = require("../models/camp.js");
-const { validateCampground } = require("../utils/validateCampground.js");
-const { isLoggedIn } = require("../utils/middlewareLogin.js");
+const { isAuthor, campgroundValidation ,isLoggedIn} = require("../utils & midleware/middleware.js");
 
-const campgroundValidation = (req, res, next) => {
-  const { error } = validateCampground(req.body);
-  if (error) {
-    const errorMessage = error.details.map((el) => el.message).join(",");
-    throw new Error(errorMessage);
-  } else {
-    next();
-  }
-}; 
-
-const isAuthor = async (req, res, next) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).populate('user');
-    const userId = req.user.id;
-    console.log(!(userId == campground.user.id));
-    if (!(userId == campground.user.id)) {
-      req.flash("error", "You are not the Author");
-      return res.redirect(`/campground/${id}`);
-    }
-    next();
-  }
 
 // routes get
 router.get("/", async (req, res, next) => {
@@ -38,7 +16,7 @@ router.get("/new", isLoggedIn, (req, res) => {
   res.render("campground/new.ejs");
 });
 
-router.get("/:id/edit", isLoggedIn, async (req, res) => {
+router.get("/:id/edit", isLoggedIn, isAuthor, async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
   res.render("campground/edit.ejs", { campground });
@@ -49,11 +27,11 @@ router.get(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id).populate("reviews").populate("user");
-    if (!campground) {
-      req.flash("error", "Cannot find that campground");
-      return res.redirect("/campground");
+    if (campground && campground.id == id) {
+      return res.render("campground/show.ejs", { campground });
     }
-    res.render("campground/show.ejs", { campground });
+    req.flash("error", "Cannot find that campground");
+    res.redirect("/campground");
   })
 );
 
@@ -79,11 +57,6 @@ router.put(
   isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    // const campground = await Campground.findById(id);
-    // if (!(campground.user.id == req.user.id)) {
-    //   req.flash("error", "You are not the author");
-    //   return res.redirect(`/campground/${id}`);
-    // }
     const { title, location, price, description, image } = req.body;
     await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
     req.flash("success", "Campground Berhasil diubah!!!");

@@ -6,7 +6,7 @@ const methodOverride = require("method-override");
 const engine = require("ejs-mate");
 const { User } = require("./models/user");
 const mongoose = require("mongoose");
-const ExpressError = require("./utils/expressError.js");
+const ExpressError = require("./utils & midleware/expressError.js");
 const session = require("express-session");
 const campgroundRoutes = require("./routers/campground.js");
 const reviewRoutes = require("./routers/reviews.js");
@@ -14,7 +14,6 @@ const registerRoutes = require("./routers/register.js");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-
 
 main().catch((err) => console.log(err));
 
