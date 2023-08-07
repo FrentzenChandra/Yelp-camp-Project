@@ -13,12 +13,25 @@ const campgroundValidation = (req, res, next) => {
   } else {
     next();
   }
-};
+}; 
+
+const isAuthor = async (req, res, next) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id).populate('user');
+    const userId = req.user.id;
+    console.log(!(userId == campground.user.id));
+    if (!(userId == campground.user.id)) {
+      req.flash("error", "You are not the Author");
+      return res.redirect(`/campground/${id}`);
+    }
+    next();
+  }
 
 // routes get
 router.get("/", async (req, res, next) => {
   const campgrounds = await Campground.find({}).populate("user");
   res.render("campground/allCampground.ejs", { campgrounds });
+  console.log(res.locals.user);
 });
 
 router.get("/new", isLoggedIn, (req, res) => {
@@ -63,8 +76,14 @@ router.put(
   "/:id/edit",
   campgroundValidation,
   isLoggedIn,
-  catchAsync(async (req, res, next) => {
+  isAuthor,
+  catchAsync(async (req, res) => {
     const { id } = req.params;
+    // const campground = await Campground.findById(id);
+    // if (!(campground.user.id == req.user.id)) {
+    //   req.flash("error", "You are not the author");
+    //   return res.redirect(`/campground/${id}`);
+    // }
     const { title, location, price, description, image } = req.body;
     await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
     req.flash("success", "Campground Berhasil diubah!!!");
@@ -77,6 +96,7 @@ router.put(
 router.delete(
   "/:id/delete",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);

@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Session Setup
 const sessionConfig = {
   secret: "thisisnotagoodsecret",
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,

@@ -17,8 +17,8 @@
             <p class=" px-3"><%= campground.price %>$/Night</p>
             <hr>
         </div>
-            
-        <div class="card-body d-flex gap-2">
+        <% if (user && user.id == campground.user.id ) { %>
+         <div class="card-body d-flex gap-2">
             <div>
                <a href="/campground/<%=campground.id%>/edit" class="btn btn-success">Edit</a> 
             </div>
@@ -27,6 +27,8 @@
                 <button class="btn btn-danger">Delete</button>
             </form>
         </div>
+        <% } %>
+        
         
             
         <div class="card-footer text-muted">
