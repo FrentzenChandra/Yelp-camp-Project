@@ -1,6 +1,9 @@
 const ExpressError = require('./expressError.js'); 
 const { Campground } = require("../models/camp.js");
 const {validateReview} = require('./validateReview.js');
+const Review = require("../models/review.js");
+const {validateCampground} = require('./validateCampground.js')
+
 
 module.exports.campgroundValidation = (req, res, next) => {
   const { error } = validateCampground(req.body);
@@ -43,3 +46,14 @@ module.exports.reviewValidation = (req, res, next) => {
     next();
   }
 };
+
+module.exports.isReviewAuthor = async (req,res,next) => {
+  const { id, idReview } = req.params;
+  const author = await Review.findById(idReview).populate("user");
+  const user = req.user;
+  if (!(user.id == author.user.id)) {
+    req.flash("error", "You do not have permission to do that");
+    return res.redirect(`/campground/${id}`);
+  };
+  next()
+} 
