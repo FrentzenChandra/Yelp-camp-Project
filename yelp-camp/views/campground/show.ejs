@@ -28,33 +28,46 @@
                 <hr>
             </div>
             <% if (user) { %>
-             
-            
-            <% if (user && user.id==campground.user.id ) { %>
-                <div class="card-body d-flex gap-2">
-                    
-                    <div>
-                        <a href="/campground/<%=campground.id%>/edit" class="btn btn-success">Edit</a>
+
+
+                <% if (user && user.id==campground.user.id ) { %>
+                    <div class="card-body d-flex gap-2">
+
+                        <div>
+                            <a href="/campground/<%=campground.id%>/edit" class="btn btn-success">Edit</a>
+                        </div>
+
+                        <form action="/campground/<%=campground.id%>/delete?_method=DELETE" method="post">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
-
-                    <form action="/campground/<%=campground.id%>/delete?_method=DELETE" method="post">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-                <% } %>
+                    <% } %>
 
 
 
-                    <div class="card-footer text-muted">
-                        <span>2 days ago</span>
-                    </div>
+                        <div class="card-footer text-muted">
+                            <span>2 days ago</span>
+                        </div>
         </div>
 
         <div class="col">
             <h1 class="">Leave A Review</h1>
             <form action="/campground/<%= campground.id %>/review" class="needs-validation" method="post">
                 <label for="customRange1" class="form-label">Rating</label>
-                <input required name="rating" max="5" min="1" type="range" class="form-range mb-3" id="customRange1">
+                <fieldset class="starability-heart" >
+                    <input  type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked
+                        aria-label="No rating." />
+                    <input type="radio" id="second-rate1" name="rating" value="1" />
+                    <label for="second-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="second-rate2" name="rating" value="2" />
+                    <label for="second-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="second-rate3" name="rating" value="3" />
+                    <label for="second-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="second-rate4" name="rating" value="4" />
+                    <label for="second-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="second-rate5" name="rating" value="5" />
+                    <label for="second-rate5" title="Amazing">5 stars</label>
+                </fieldset>
                 <div class="form-floating mb-3">
                     <textarea required name="body" id="validationServer01" class="form-control" style="height: 100px"
                         placeholder="Password"></textarea>
@@ -72,9 +85,12 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <blockquote class="blockquote mb-0">
-                            <h3 >Rating : <%= review.rating %></h3>
-                            <h6 class="card-subtitle mb-3 text-muted">By <%= review.user.username  %></h6>
-                            <footer class="">Comment : <%= review.body %>
+                            <h5><%= review.user.username %></h5>
+                            <p class="starability-result " data-rating="<%= review.rating %>">
+                            Rated: <%= review.rating %> stars
+                            </p>
+                            <footer class="">
+                                <%= review.body %>
                             </footer>
                         </blockquote>
                         <% if (user && user.id==review.user.id ) { %>
@@ -86,6 +102,6 @@
                     </div>
                 </div>
                 <% } %>
-            <% } %>
+                    <% } %>
         </div>
     </div>
