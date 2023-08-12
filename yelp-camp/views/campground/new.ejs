@@ -1,7 +1,7 @@
 <% layout('boilerplate/html.ejs') -%>
 
     <div class="container">
-        <form action="/campground/new" enctype="multipart/form-data" class="needs-validation" method="post" novalidate>
+        <form action="/campground/new"  class="needs-validation" method="post" novalidate>
             <div class="mx-auto w-50">
                 <h1 class="text-center mb-5 ">New Campground</h1>
                 <div class="form-floating mb-3">
@@ -26,7 +26,7 @@
                         Invalid Location
                     </div>
                 </div>
-                <input type="file" name="upload" class="mb-3" multiple>
+                
                 <div class="form-floating mb-3">
                     
                     <input required type="text" name="image" class="form-control" id="floatingImage"

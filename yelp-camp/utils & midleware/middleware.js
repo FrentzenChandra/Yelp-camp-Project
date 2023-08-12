@@ -6,6 +6,7 @@ const {validateCampground} = require('./validateCampground.js')
 
 
 module.exports.campgroundValidation = (req, res, next) => {
+  console.log(req.body);
   const { error } = validateCampground(req.body);
   if (error) {
     const errorMessage = error.details.map((el) => el.message).join(",");
