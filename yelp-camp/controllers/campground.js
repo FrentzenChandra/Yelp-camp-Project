@@ -35,11 +35,12 @@ module.exports.show = async (req, res) => {
 
 module.exports.postNewCampground = async (req, res) => {
   const user = req.user.id;
-  const { title, location, price, description, image } = req.body;
-  const campground = new Campground({ title, location, price, description, image, user });
+  const images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  const { title, location, price, description } = req.body;
+  const campground = new Campground({ title, location, price, description, images, user });
   await campground.save();
   req.flash("success", "Sukses Membuat Camground Baru!!!");
-  res.redirect("/campground");
+  res.redirect(`/campground/${campground.id}`);
 };
 
 module.exports.updateCampground = async (req, res) => {
@@ -49,7 +50,6 @@ module.exports.updateCampground = async (req, res) => {
   req.flash("success", "Campground Berhasil diubah!!!");
   res.redirect("/campground");
 };
-
 
 module.exports.deleteCampground = async (req, res) => {
   const { id } = req.params;

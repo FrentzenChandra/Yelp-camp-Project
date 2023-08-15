@@ -9,12 +9,7 @@ const upload = multer({ storage });
 
 router.get("/", campgrounds.index);
 
-router.route("/new").get(isLoggedIn, campgrounds.new).post(campgroundValidation, isLoggedIn, catchAsync(campgrounds.postNewCampground));
-
-// .post(upload.array("upload"), (req, res) => {
-//   console.log(req.body, req.files);
-//   res.send("ok");
-// });
+router.route("/new").get(isLoggedIn, campgrounds.new).post(isLoggedIn, upload.array("upload"), campgroundValidation, catchAsync(campgrounds.postNewCampground));
 
 router.route("/:id/edit").get(isLoggedIn, isAuthor, campgrounds.edit).put(campgroundValidation, isLoggedIn, isAuthor, catchAsync(campgrounds.updateCampground));
 

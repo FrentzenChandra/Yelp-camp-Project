@@ -1,7 +1,29 @@
 <% layout('boilerplate/html.ejs') -%>
     <div class="row gap-3">
         <div class="card col" style="width: auto;">
-            <img src="<%=campground.image%>" class="card-img-top img-fluid" alt="No Picture">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+
+                    <% campground.images.forEach((img,i) => { %>
+                        <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                            <img src="<%= img.url %>" class="d-inline-block w-100 h-25" alt="...">
+                        </div>
+                        <% }) %>
+                </div>
+                <% if (campground.images.length > 1 ) { %>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <% } %>
+
+            </div>
             <div class="card-body">
                 <h5 class="card-title font-bold">
                     <%= campground.title %>
@@ -54,8 +76,8 @@
             <h1 class="">Leave A Review</h1>
             <form action="/campground/<%= campground.id %>/review" class="needs-validation" method="post">
                 <label for="customRange1" class="form-label">Rating</label>
-                <fieldset class="starability-heart" >
-                    <input  type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked
+                <fieldset class="starability-heart">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked
                         aria-label="No rating." />
                     <input type="radio" id="second-rate1" name="rating" value="1" />
                     <label for="second-rate1" title="Terrible">1 star</label>
@@ -85,9 +107,11 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <blockquote class="blockquote mb-0">
-                            <h5><%= review.user.username %></h5>
+                            <h5>
+                                <%= review.user.username %>
+                            </h5>
                             <p class="starability-result " data-rating="<%= review.rating %>">
-                            Rated: <%= review.rating %> stars
+                                Rated: <%= review.rating %> stars
                             </p>
                             <footer class="">
                                 <%= review.body %>
