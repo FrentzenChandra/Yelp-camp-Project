@@ -1,7 +1,7 @@
 <% layout('boilerplate/html.ejs') -%>
 
     <div class="container">
-        <form action="/campground/<%= campground.id %>/edit?_method=PUT" class="needs-validation" method="post" novalidate>
+        <form action="/campground/<%= campground.id %>/edit?_method=PUT" enctype="multipart/form-data" class="needs-validation" method="post" novalidate>
             <div class="mx-auto w-50">
                 <h1 class="text-center mb-5 ">New Campground</h1>
                 <div class="form-floating mb-3">
@@ -26,16 +26,8 @@
                         Invalid Location
                     </div>
                 </div>
-                <div class="form-floating mb-3">
-                    <input value="<%= campground.image %>" required type="text" name="image" class="form-control" id="floatingImage"
-                        placeholder="Password">
-                    <label for="floatingImage">Image Url</label>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                    <div class="invalid-feedback">
-                        Invalid Url
-                    </div>
+                <div class="mb-3">
+                    <input class="form-control" type="file" id="formFileMultiple" name="upload" multiple>
                 </div>
                 <div class="form-floating mb-4">
                     <input value="<%= campground.price %>" required type="text" name="price" class="form-control" id="floatingPrice"

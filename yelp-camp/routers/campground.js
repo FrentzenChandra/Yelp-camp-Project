@@ -11,7 +11,7 @@ router.get("/", campgrounds.index);
 
 router.route("/new").get(isLoggedIn, campgrounds.new).post(isLoggedIn, upload.array("upload"), campgroundValidation, catchAsync(campgrounds.postNewCampground));
 
-router.route("/:id/edit").get(isLoggedIn, isAuthor, campgrounds.edit).put(campgroundValidation, isLoggedIn, isAuthor, catchAsync(campgrounds.updateCampground));
+router.route("/:id/edit").get(isLoggedIn, isAuthor, campgrounds.edit).put(isLoggedIn, upload.array("upload"), campgroundValidation, isAuthor, catchAsync(campgrounds.updateCampground));
 
 router.get("/:id", catchAsync(campgrounds.show));
 

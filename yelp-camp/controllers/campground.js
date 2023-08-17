@@ -45,8 +45,11 @@ module.exports.postNewCampground = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
   const { id } = req.params;
-  const { title, location, price, description, image } = req.body;
-  await Campground.findByIdAndUpdate(id, { title, location, price, description, image });
+  const camp = await Campground.findById(id);
+  const { title, location, price, description } = req.body;
+  const uploadedImages = req.files.map(f => ({url: f.path, filename: f.filename}))
+  camp.images.push(...uploadedImages)
+  await Campground.findByIdAndUpdate(id, { title, location, price, description, images:camp.images });
   req.flash("success", "Campground Berhasil diubah!!!");
   res.redirect("/campground");
 };
