@@ -10,20 +10,24 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
+const imageSchema = new Schema({
+  url: String,
+  filename: String,
+});
+
+imageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/w_200");
+});
+
 const CampgroundSchema = new Schema({
   location: String,
   title: String,
-  images: [
-    {
-      url: String,
-      filename: String,
-    }
-  ],
+  images: [imageSchema],
   price: Number,
   description: String,
-  user : {
+  user: {
     type: Schema.Types.ObjectId,
-    ref : 'User',
+    ref: "User",
   },
   reviews: [
     {
@@ -34,13 +38,11 @@ const CampgroundSchema = new Schema({
 });
 
 CampgroundSchema.post("findOneAndDelete", async function (camp) {
-  if(camp){
-    await Review.deleteMany({_id :{$in: camp.reviews }});
+  if (camp) {
+    await Review.deleteMany({ _id: { $in: camp.reviews } });
   }
-  
 });
 
 const Campground = mongoose.model("Campground", CampgroundSchema);
-
 
 module.exports = { Campground };

@@ -6,6 +6,7 @@ const schema = Joi.object({
   // image: Joi.string().required(),
   price: Joi.number().min(1).required(),
   description: Joi.string(),
+  deleteImages: Joi.array(),
 });
 
 const validateCampground = (e) => {

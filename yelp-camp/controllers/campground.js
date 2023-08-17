@@ -1,9 +1,8 @@
 const { Campground } = require("../models/camp.js");
-
+const cloudinary = require("cloudinary").v2;
 module.exports.index = async (req, res, next) => {
   const campgrounds = await Campground.find({}).populate("user");
   res.render("campground/allCampground.ejs", { campgrounds });
-  console.log(res.locals.user);
 };
 
 module.exports.new = (req, res) => {
@@ -44,19 +43,34 @@ module.exports.postNewCampground = async (req, res) => {
 };
 
 module.exports.updateCampground = async (req, res) => {
+  console.log(req.body);
   const { id } = req.params;
   const camp = await Campground.findById(id);
-  const { title, location, price, description } = req.body;
-  const uploadedImages = req.files.map(f => ({url: f.path, filename: f.filename}))
-  camp.images.push(...uploadedImages)
-  await Campground.findByIdAndUpdate(id, { title, location, price, description, images:camp.images });
+  const { title, location, price, description, deleteImages } = req.body;
+  const uploadedImages = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  camp.images.push(...uploadedImages);
+  if (deleteImages) {
+    for (let filename of deleteImages) {
+      cloudinary.api.delete_resources(`${filename}`);
+    }
+    await Campground.findByIdAndUpdate(id, { title, location, price, description, $pull: { images: { filename: { $in: deleteImages } } } });
+  } else {
+    await Campground.findByIdAndUpdate(id, { title, location, price, description, images: camp.images });
+  }
+
   req.flash("success", "Campground Berhasil diubah!!!");
-  res.redirect("/campground");
+  res.redirect(`/campground/${id}`);
 };
 
 module.exports.deleteCampground = async (req, res) => {
   const { id } = req.params;
-  await Campground.findByIdAndDelete(id);
+  const { images } = await Campground.findByIdAndDelete(id);
+  if (images.length <= 1) {
+    for (let image of images) {
+      cloudinary.api.delete_resources(`${image.filename}`).then((result) => console.log(result));
+    }
+  }
+
   req.flash("success", "Berhasil menghapus campground!!!");
   res.redirect("/campground");
 };
