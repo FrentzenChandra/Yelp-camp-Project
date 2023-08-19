@@ -53,14 +53,19 @@
                 <div class="mb-3">
                     <input class="form-control" type="file" id="formFileMultiple" name="upload" multiple>
                 </div>
-                <% for(let i = 0 ; i < campground.images.length ; i++) { %>
-                <img src="<%= campground.images[i].thumbnail %>" alt="" class="img-thumbnail mb-3" >
-                <input type="checkbox" id="image-<%=i%>" value="<%= campground.images[i].filename %>" name="deleteImages[<%= i %>]">
-                <label for="image-<%=i%>">Delete Image</label>
-                <% } %>
-                <button class="btn btn-success mt-5 d-block">Submit</button>
+                <% for(let i=0 ; i < campground.images.length ; i++) { %>
+                    <div class="d-block text-center">
+                        <img src="<%= campground.images[i].thumbnail %>" alt="" class="img-thumbnail mb-3">
+                        <input type="checkbox" id="image-<%=i%>" value="<%= campground.images[i].filename %>"
+                            name="deleteImages[<%= i %>]">
+                        <label for="image-<%=i%>">Delete Image</label>
+                    </div>
+
+                    <% } %>
+                        <button class="btn btn-success mt-5 d-block mb-4">Submit</button>
+                        <a href="/campground">Back To Campground?</a>
             </div>
         </form>
-
+        
 
     </div>

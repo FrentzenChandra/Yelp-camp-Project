@@ -1,5 +1,10 @@
 const { Campground } = require("../models/camp.js");
 const cloudinary = require("cloudinary").v2;
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.mapbox_token;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
+
+
 module.exports.index = async (req, res, next) => {
   const campgrounds = await Campground.find({}).populate("user");
   res.render("campground/allCampground.ejs", { campgrounds });
@@ -33,10 +38,16 @@ module.exports.show = async (req, res) => {
 };
 
 module.exports.postNewCampground = async (req, res) => {
+  
   const user = req.user.id;
   const images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   const { title, location, price, description } = req.body;
-  const campground = new Campground({ title, location, price, description, images, user });
+  const geoData = await geocoder.forwardGeocode({
+    query:location,
+    limit: 1,
+  }).send();
+  const geometry = geoData.body.features[0].geometry;
+  const campground = new Campground({ title, location, price, description, images, user,geometry });
   await campground.save();
   req.flash("success", "Sukses Membuat Camground Baru!!!");
   res.redirect(`/campground/${campground.id}`);
