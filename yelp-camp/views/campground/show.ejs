@@ -1,8 +1,7 @@
 <% layout('boilerplate/html.ejs') -%>
 
     <div class="row gap-3">
-            <div id='map' style='width: 400px; height: 300px;'></div>
-
+            
         <div class="card col" style="width: auto;">
             <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -50,10 +49,11 @@
                 </p>
                 <hr>
             </div>
-            <% if (user) { %>
+            
+            
 
 
-                <% if (user && user.id==campground.user.id ) { %>
+                <% if (user && user.id == campground.user.id ) { %>
                     <div class="card-body d-flex gap-2">
 
                         <div>
@@ -74,6 +74,8 @@
         </div>
 
         <div class="col">
+            <div id='map' class="mx-auto mb-4" style='width: 520px; height: 300px;'></div>
+            <% if (user) { %>
             <h1 class="">Leave A Review</h1>
             <form action="/campground/<%= campground.id %>/review" class="needs-validation" method="post">
                 <label for="customRange1" class="form-label">Rating</label>

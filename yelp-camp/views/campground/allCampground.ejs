@@ -1,26 +1,48 @@
-<% layout('boilerplate/html.ejs') -%>
+<style>
 
-    <h1>All Campgrounds</h1>
+
+    #map {
+        height: 10%;
+        width: 100%;
+    }
+</style>
+
+
+<% layout('boilerplate/html.ejs') -%>
+<div id="map" class="img-fluid"></div>
+    <div class="position-relative">
+     <h1>All Campgrounds</h1>
     <ul>
         <% for( campground of campgrounds) { %>
             <div class="card my-4 " style="width: auto;">
                 <div class="row d-flex ">
                     <div class="col-4">
-                        <% if (campground.images.length >= 1 ) { %>
-                         <img src="<%= campground.images[0].url %>" class="card-img-top font-bold" alt="...">   
-                        <% } %>
+                        <% if (campground.images.length>= 1 ) { %>
+                            <img src="<%= campground.images[0].url %>" class="card-img-top font-bold img-fluid" alt="...">
+                            <% }else { %>
+                                <img src="<%= campgrounds[0].images[0].url %>" class="card-img-top font-bold" alt="...">
+                                <% } %>
                     </div>
                     <div class="col-8">
                         <div class="card-body pb-0">
-                            <h5 class="card-title"><%= campground.title %> - <span class="text-muted"><%= campground.user.username %></span></h5>
-                            <p class="card-text mb-2"><%= campground.description %></p>
+                            <h5 class="card-title">
+                                <%= campground.title %> - <span class="text-muted">
+                                        <%= campground.user.username %>
+                                    </span>
+                            </h5>
+                            <p class="card-text mb-2">
+                                <%= campground.description %>
+                            </p>
                             <a href="/campground/<%= campground.id %>" class="btn btn-primary ">Detail</a>
                         </div>
                     </div>
-                    
-                </div>
-                
-            </div>
-        <% } %>
-    </ul>
 
+                </div>
+
+            </div>
+            <% } %>
+    </ul>   
+    </div>
+    
+
+    <script src="javascripts/clusterMap.js"></script>
